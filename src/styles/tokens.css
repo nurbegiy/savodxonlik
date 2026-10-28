@@ -1,0 +1,41 @@
+/* Design tokens. Charcoal + neutral white + restrained orange. Both themes meet WCAG AA for text. */
+:root, :root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #1a1918;
+  --bg-sunken: #121110;
+  --surface: #232220;
+  --surface-2: #2b2a27;
+  --border: #3a3834;
+  --border-strong: #6f6b63;
+  --text: #f1efeb;
+  --text-muted: #b3afa8;
+  --accent: #ff8a3d;
+  --accent-hover: #ff9f5f;
+  --on-accent: #1a1918;
+  --danger: #ff7b72;
+  --success: #5fd08a;
+  --focus: #ffb27a;
+}
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f6f5f2;
+  --bg-sunken: #e9e7e2;
+  --surface: #ffffff;
+  --surface-2: #f0eee9;
+  --border: #d9d6cf;
+  --border-strong: #a8a49b;
+  --text: #1d1c1a;
+  --text-muted: #57534c;
+  --accent: #c2410c;
+  --accent-hover: #9a3412;
+  --on-accent: #ffffff;
+  --danger: #b42318;
+  --success: #17724a;
+  --focus: #9a3412;
+}
+:root {
+  --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+  --fs-sm: .875rem; --fs-md: 1rem; --fs-lg: 1.25rem; --fs-xl: 1.75rem;
+  --radius: 6px;
+  --bar-h: 52px;
+}
