@@ -8,7 +8,8 @@ import { createProgressService } from '../lib/progress.js';
 import { Spinner } from '../ui/Feedback.jsx';
 import Layout from './Layout.jsx';
 
-const UPCOMING = ['ch3', 'ch4', 'ch5', 'ch6', 'ch7', 'ch8', 'ch9'];
+// Full 9-chapter plan in order; chapters with a published lesson render as lessons, the rest as "coming soon".
+const PLAN = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function HomePage() {
   const { t, i18n } = useTranslation();
@@ -45,9 +46,20 @@ export default function HomePage() {
           <section aria-labelledby="chapters-h">
             <h2 id="chapters-h" className="visually-hidden">{t('home.chaptersTitle')}</h2>
             <ol className="chapters">
-              {sorted.map((entry, i) => {
+              {PLAN.map((no) => {
+                const idx = sorted.findIndex((e) => e.def.order === no);
+                if (idx < 0) {
+                  return (
+                    <li key={`up${no}`} className="chapter chapter--off">
+                      <span className="chapter__no" aria-hidden="true">{no}</span>
+                      <div><h2>{t(`curriculum.ch${no}`)}</h2></div>
+                      <span className="tag">{t('home.comingSoon')}</span>
+                    </li>
+                  );
+                }
+                const entry = sorted[idx];
                 const { def } = entry;
-                const prev = sorted[i - 1];
+                const prev = sorted[idx - 1];
                 const locked = prev ? !done(prev.def.id) : false;
                 const isDone = done(def.id);
                 const content = entry.content[lang] ?? entry.content.uz;
@@ -67,13 +79,6 @@ export default function HomePage() {
                   </li>
                 );
               })}
-              {UPCOMING.map((k, i) => (
-                <li key={k} className="chapter chapter--off">
-                  <span className="chapter__no" aria-hidden="true">{sorted.length + i + 1}</span>
-                  <div><h2>{t(`curriculum.${k}`)}</h2></div>
-                  <span className="tag">{t('home.comingSoon')}</span>
-                </li>
-              ))}
             </ol>
           </section>
         </main>

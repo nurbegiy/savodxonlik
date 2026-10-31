@@ -9,6 +9,23 @@ export const NEUTRAL_ACTIONS = new Set([
   'window.focus', 'window.move', 'ctx.close', 'start.close', 'sim.load', 'sim.reset', 'guide.ack', 'explorer.cancelRename',
 ]);
 
+
+const MAX_TEXT = 20000;
+const MAX_CLIP = 5000;
+// Records the text before a change so Ctrl+Z can restore it. Consecutive typing is one undo step.
+function pushHistory(props, kind) {
+  const h = props.history ?? [];
+  if (kind === 'type' && props.lastKind === 'type') return { lastKind: kind };
+  return { history: [...h, String(props.text)].slice(-50), lastKind: kind };
+}
+function range(text, action) {
+  const len = String(text).length;
+  const a = Number.isInteger(action.start) ? action.start : len;
+  const b = Number.isInteger(action.end) ? action.end : a;
+  const start = Math.max(0, Math.min(a, b, len));
+  return { start, end: Math.max(start, Math.min(Math.max(a, b), len)) };
+}
+
 const APPS = { explorer: { w: 760, h: 440 }, notepad: { w: 480, h: 360 } };
 
 function updateWindow(state, id, fn) {
@@ -226,19 +243,61 @@ export function simReducer(state, action) {
 
     // ---- notepad ------------------------------------------------------------
     case 'notepad.edit':
-      return updateWindow(state, action.windowId, (w) => ({ ...w, props: { ...w.props, text: String(action.text ?? '').slice(0, 20000), dirty: true, saveError: null } }));
+      return updateWindow(state, action.windowId, (w) => {
+        const text = String(action.text ?? '').slice(0, MAX_TEXT);
+        if (text === w.props.text) return w;
+        return { ...w, props: { ...w.props, ...pushHistory(w.props, 'type'), text, dirty: true, saveError: null, sel: false } };
+      });
+    case 'notepad.selectAll':
+      return updateWindow(state, action.windowId, (w) => ({ ...w, props: { ...w.props, sel: String(w.props.text).length > 0 } }));
+    case 'notepad.copy': {
+      const text = String(action.text ?? '').slice(0, MAX_CLIP);
+      if (!text) return state;
+      return { ...state, textClipboard: text };
+    }
+    case 'notepad.cut': {
+      const w = getWindow(state, action.windowId);
+      if (!w || w.app !== 'notepad') return state;
+      const { start, end } = range(w.props.text, action);
+      if (start === end) return state;
+      const clip = w.props.text.slice(start, end).slice(0, MAX_CLIP);
+      const text = w.props.text.slice(0, start) + w.props.text.slice(end);
+      return updateWindow({ ...state, textClipboard: clip }, w.id, (x) => ({
+        ...x, props: { ...x.props, ...pushHistory(x.props, 'cut'), text, dirty: true, sel: false, caret: start, caretNonce: (x.props.caretNonce ?? 0) + 1 },
+      }));
+    }
+    case 'notepad.paste': {
+      const w = getWindow(state, action.windowId);
+      const clip = state.textClipboard;
+      if (!w || w.app !== 'notepad' || !clip) return state;
+      const { start, end } = range(w.props.text, action);
+      const text = (w.props.text.slice(0, start) + clip + w.props.text.slice(end)).slice(0, MAX_TEXT);
+      return updateWindow(state, w.id, (x) => ({
+        ...x, props: { ...x.props, ...pushHistory(x.props, 'paste'), text, dirty: true, sel: false, saveError: null, caret: Math.min(start + clip.length, text.length), caretNonce: (x.props.caretNonce ?? 0) + 1 },
+      }));
+    }
+    case 'notepad.undo': {
+      const w = getWindow(state, action.windowId);
+      const h = w?.props.history ?? [];
+      if (!w || w.app !== 'notepad' || !h.length) return state;
+      const text = h[h.length - 1];
+      return updateWindow(state, w.id, (x) => ({
+        ...x, props: { ...x.props, text, history: h.slice(0, -1), lastKind: 'undo', dirty: true, sel: false, caret: text.length, caretNonce: (x.props.caretNonce ?? 0) + 1 },
+      }));
+    }
     case 'notepad.save': {
       const w = getWindow(state, action.windowId);
       if (!w || w.app !== 'notepad') return state;
-      if (w.props.fileId && getNode(state.fs, w.props.fileId)) {
+      const bump = (x) => (x.props.savedNonce ?? 0) + 1;
+      if (!action.saveAs && w.props.fileId && getNode(state.fs, w.props.fileId)) {
         const fs = updateContent(state.fs, w.props.fileId, w.props.text);
-        return updateWindow({ ...state, fs }, w.id, (x) => ({ ...x, props: { ...x.props, dirty: false, saveError: null } }));
+        return updateWindow({ ...state, fs }, w.id, (x) => ({ ...x, props: { ...x.props, dirty: false, saveError: null, savedNonce: bump(x) } }));
       }
       const folderId = action.folderId ?? 'documents';
       const err = validateName(state.fs, folderId, action.name);
       if (err) return updateWindow(state, w.id, (x) => ({ ...x, props: { ...x.props, saveError: err } }));
       const created = createNode(state.fs, { parentId: folderId, type: 'file', name: action.name.trim(), content: w.props.text });
-      return updateWindow({ ...state, fs: created.fs }, w.id, (x) => ({ ...x, props: { ...x.props, fileId: created.id, dirty: false, saveError: null } }));
+      return updateWindow({ ...state, fs: created.fs }, w.id, (x) => ({ ...x, props: { ...x.props, fileId: created.id, dirty: false, saveError: null, savedNonce: bump(x) } }));
     }
 
     // ---- system ---------------------------------------------------------------

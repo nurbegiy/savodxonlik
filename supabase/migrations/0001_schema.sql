@@ -1,4 +1,4 @@
--- Raqamli Dunyo — core schema.
+-- KursorApp — core schema.
 -- AUTHORITATIVE (server-owned): profiles, lesson_progress, task_completions, competencies, audit_log, content tables.
 -- TEMPORARY (learner-owned):    lesson_checkpoints (simulation snapshots; may be overwritten or discarded at any time).
 

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { LogOut } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider.jsx';
 import { LanguageSelect, ThemeToggle } from '../ui/AppControls.jsx';
+import { Logo, Wordmark } from '../ui/Logo.jsx';
 
 export default function Layout({ children }) {
   const { t } = useTranslation();
@@ -10,7 +11,7 @@ export default function Layout({ children }) {
   return (
     <div className="page">
       <header className="topbar">
-        <Link to="/" className="topbar__brand"><span className="topbar__logo" aria-hidden="true" />{t('app.name')}</Link>
+        <Link to="/" className="topbar__brand" aria-label={t('app.name')}><Logo size={28} /><Wordmark /></Link>
         <nav aria-label={t('common.home')}>
           <NavLink to="/" end className="btn btn--ghost btn--sm">{t('common.home')}</NavLink>
           {isAdmin && <NavLink to="/admin" className="btn btn--ghost btn--sm">{t('admin.title')}</NavLink>}

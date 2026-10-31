@@ -1,0 +1,56 @@
+const { chromium } = require('playwright');
+const BASE = process.env.BASE_URL || 'http://127.0.0.1:5173';
+const OUT = process.env.OUT || '/tmp';
+const assert = (c, m) => { if (!c) throw new Error('ASSERT: ' + m); console.log('ok -', m); };
+(async () => {
+  const browser = await chromium.launch();
+  const page = await (await browser.newContext({ viewport: { width: 1280, height: 760 }, colorScheme: 'dark' })).newPage();
+  const errors = [];
+  page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errors.push(m.text()); });
+  page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
+  const counter = async () => (await page.locator('.lesson__count').innerText()).trim();
+  const ta = page.locator('.sim-notepad__text');
+  const saveName = async (n) => { await page.locator('.sim-saveform input').fill(n); await page.keyboard.press('Enter'); };
+  await page.goto(BASE + '/login');
+  await page.getByRole('button', { name: /sinov rejimida/i }).click();
+  await page.goto(BASE + '/learn/ch5-documents');
+  await page.waitForSelector('.sim-stage');
+  await page.getByRole('button', { name: 'Davom etish' }).click();
+  await page.locator('.sim-icon', { hasText: 'Bloknot' }).dblclick();
+  assert((await counter()) === '3 / 13', 'notepad opened');
+  await ta.click(); await page.keyboard.type('Maqsad: o‘rganish'); await page.keyboard.press('Enter');
+  await page.keyboard.type('Reja: har kuni mashq'); await page.keyboard.press('Enter');
+  await page.keyboard.type('Natija: yaxshi');
+  assert((await counter()) === '4 / 13', 'three lines written');
+  // wrong name first
+  await page.keyboard.press('Control+s');
+  await saveName('boshqa.txt');
+  await page.waitForSelector('.note--wrong');
+  assert((await counter()) === '4 / 13', 'wrong name does not advance');
+  await page.screenshot({ path: OUT + '/40-ch5-wrong-name.png' });
+  // recovery with Save As
+  await page.getByRole('button', { name: /Boshqa nom bilan/ }).click();
+  await saveName('Mening hujjatim.txt');
+  assert((await counter()) === '5 / 13', 'Save As with correct name advances');
+  await page.locator('.sim-win', { hasText: 'Bloknot' }).getByRole('button', { name: 'Yopish' }).click();
+  await page.locator('.sim-icon', { hasText: 'Hujjatlar' }).dblclick();
+  assert((await counter()) === '7 / 13', 'documents open');
+  await page.locator('.sim-item', { hasText: 'Mening hujjatim.txt' }).click();
+  assert((await counter()) === '8 / 13', 'file selected');
+  await page.waitForTimeout(600); // a double-click is two clicks within 450 ms; keep select and open apart
+  await page.locator('.sim-item', { hasText: 'Mening hujjatim.txt' }).dblclick();
+  assert((await counter()) === '9 / 13', 'file opened in notepad');
+  await ta.click(); await page.keyboard.press('Control+End'); await page.keyboard.press('Enter'); await page.keyboard.type('Hujjat tayyor');
+  assert((await counter()) === '10 / 13', 'edited');
+  await page.keyboard.press('Control+s');
+  assert((await counter()) === '11 / 13', 'saved edit');
+  await page.locator('.sim-win', { hasText: 'Bloknot' }).getByRole('button', { name: 'Yopish' }).click();
+  assert((await counter()) === '12 / 13', 'closed');
+  await page.locator('.sim-item', { hasText: 'Mening hujjatim.txt' }).dblclick();
+  assert((await counter()) === '13 / 13', 'reopen validated');
+  await page.screenshot({ path: OUT + '/41-ch5-finish.png' });
+  assert((await ta.inputValue()).includes('tayyor'), 'saved text really persisted');
+  const bad = errors.filter((e) => !/favicon|DevTools/.test(e));
+  assert(bad.length === 0, 'no console errors ' + JSON.stringify(bad));
+  await browser.close();
+})().catch((e) => { console.error(e); process.exit(1); });

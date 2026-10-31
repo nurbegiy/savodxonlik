@@ -42,6 +42,7 @@ export function createInitialSimState() {
     startOpen: false,
     contextMenu: null,
     clipboard: null,
+    textClipboard: null,
     settings: { language: 'uz' },
   };
 }

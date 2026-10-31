@@ -117,11 +117,11 @@ export default function Explorer({ win }) {
     if (e.target.tagName === 'INPUT') return;
     const mod = e.ctrlKey || e.metaKey;
     const k = e.key.toLowerCase();
-    if (mod && k === 'c') { e.preventDefault(); dispatch({ type: 'clipboard.copy', ids: sel, windowId: winId }); }
-    else if (mod && k === 'x') { e.preventDefault(); dispatch({ type: 'clipboard.cut', ids: sel, windowId: winId }); }
-    else if (mod && k === 'v') { e.preventDefault(); if (!inTrash) dispatch({ type: 'clipboard.paste', destId: folder.id, windowId: winId }); }
+    if (mod && k === 'c') { e.preventDefault(); dispatch({ type: 'clipboard.copy', ids: sel, windowId: winId, via: 'key' }); }
+    else if (mod && k === 'x') { e.preventDefault(); dispatch({ type: 'clipboard.cut', ids: sel, windowId: winId, via: 'key' }); }
+    else if (mod && k === 'v') { e.preventDefault(); if (!inTrash) dispatch({ type: 'clipboard.paste', destId: folder.id, windowId: winId, via: 'key' }); }
     else if (mod && k === 'a') { e.preventDefault(); d({ type: 'explorer.select', ids: items.map((n) => n.id) }); }
-    else if (e.key === 'Delete' && !inTrash) { e.preventDefault(); trash(); }
+    else if (e.key === 'Delete' && !inTrash) { e.preventDefault(); if (sel.length) dispatch({ type: 'fs.trash', ids: sel, windowId: winId, via: 'key' }); }
     else if (e.key === 'F2') { e.preventDefault(); beginRename(); }
     else if (e.key === 'Backspace') { e.preventDefault(); d({ type: 'explorer.up' }); }
   };

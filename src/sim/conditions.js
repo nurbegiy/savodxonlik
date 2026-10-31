@@ -6,6 +6,8 @@ export const CONDITION_KINDS = [
   'window.exists', 'window.mode', 'explorer.at', 'start.open',
   'fs.exists', 'fs.trashed', 'clipboard.has', 'notepad.text', 'desktop.selected', 'explorer.query',
   'explorer.atName', 'explorer.selectedName', 'explorer.renaming',
+  'notepad.selectedAll', 'textclip.equalsText', 'notepad.textTimes', 'notepad.empty', 'notepad.saved',
+  'notepad.lines', 'notepad.has', 'notepad.fileOpen',
 ];
 
 const lower = (s) => String(s ?? '').toLowerCase();
@@ -52,6 +54,27 @@ export function evaluate(cond, state) {
         w.props.selection.some((id) => lower(displayName(state.fs.nodes[id] ?? {})) === lower(cond.name)));
     case 'explorer.renaming':
       return state.windows.some((w) => w.app === 'explorer' && !!w.props.editing);
+    case 'notepad.selectedAll':
+      return state.windows.some((w) => w.app === 'notepad' && w.props.sel === true && String(w.props.text).length > 0);
+    case 'textclip.equalsText': {
+      const clip = state.textClipboard;
+      return !!clip && state.windows.some((w) => w.app === 'notepad' && w.props.text === clip);
+    }
+    case 'notepad.textTimes': {
+      const clip = state.textClipboard;
+      return !!clip && state.windows.some((w) => w.app === 'notepad' && w.props.text === clip.repeat(cond.n));
+    }
+    case 'notepad.empty':
+      return state.windows.some((w) => w.app === 'notepad' && w.props.text === '');
+    case 'notepad.saved':
+      return state.windows.some((w) => w.app === 'notepad' && w.props.fileId && state.fs.nodes[w.props.fileId] && !w.props.dirty);
+    case 'notepad.lines':
+      return state.windows.some((w) => w.app === 'notepad' && String(w.props.text).split('\n').filter((l) => l.trim()).length >= cond.min &&
+        String(w.props.text).trim().length >= (cond.minLength ?? 0));
+    case 'notepad.has':
+      return state.windows.some((w) => w.app === 'notepad' && lower(w.props.text).includes(lower(cond.contains)));
+    case 'notepad.fileOpen':
+      return state.windows.some((w) => w.app === 'notepad' && w.props.fileId && lower(displayName(state.fs.nodes[w.props.fileId] ?? {})) === lower(cond.name));
     case 'desktop.selected': return state.desktop.selectedIcon === cond.iconId;
     default: return false;
   }

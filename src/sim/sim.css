@@ -129,3 +129,8 @@
   .sim-search input { width: 90px; }
   .sim-clock span:last-child { display: none; }
 }
+
+.sim-toolbar--wrap { flex-wrap: wrap; }
+.sim-kbd { font: inherit; font-size: 11px; opacity: .7; margin-left: 4px; padding: 0 4px; border: 1px solid var(--border-strong, currentColor); border-radius: 4px; }
+.sim-cmd:disabled { opacity: .45; cursor: default; }
+.sim-notepad .sim-cmd__txt { white-space: nowrap; }

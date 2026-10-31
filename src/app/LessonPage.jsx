@@ -5,7 +5,7 @@ import { ArrowLeft, HelpCircle, X } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider.jsx';
 import { createSimStore } from '../sim/store.js';
 import { createGuide, STATUS } from '../engine/guide.js';
-import { LESSONS, getLessonEntry } from '../lessons/index.js';
+import { getLessonEntry, nextLesson } from '../lessons/index.js';
 import { createProgressService } from '../lib/progress.js';
 import { createTargetRegistry } from '../sim/ui/SimContext.jsx';
 import Desktop from '../sim/ui/Desktop.jsx';
@@ -108,7 +108,7 @@ function LessonRunner({ entry }) {
   const total = entry.def.steps.length;
   const lang = i18n.language;
   const title = (entry.content[lang] ?? entry.content.uz).title;
-  const nextEntry = LESSONS.find((l) => l.def.order === entry.def.order + 1);
+  const nextEntry = nextLesson(entry.def.id);
   const overlayActive = g.status === STATUS.AWAITING && step?.type === 'action';
 
   const restart = () => {

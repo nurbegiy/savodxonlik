@@ -6,7 +6,7 @@ export const ACTION_TYPES = [
   'start.open', 'start.toggle', 'explorer.navigate', 'explorer.newFolder', 'explorer.commitRename',
   'explorer.beginRename', 'explorer.search', 'explorer.select', 'explorer.back', 'explorer.up',
   'clipboard.copy', 'clipboard.cut', 'clipboard.paste', 'fs.trash', 'fs.restore', 'notepad.save',
-  'notepad.edit', 'guide.ack', 'desktop.click', 'explorer.up', 'explorer.forward',
+  'notepad.edit', 'notepad.selectAll', 'notepad.copy', 'notepad.cut', 'notepad.paste', 'notepad.undo', 'guide.ack', 'desktop.click', 'explorer.up', 'explorer.forward',
 ];
 
 function checkCondition(c, path, errors) {

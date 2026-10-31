@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { Link } from 'react-router-dom';
+import ContactLinks from './ContactLinks.jsx';
 import { useTranslation } from 'react-i18next';
 
 export function Spinner({ label }) {
@@ -17,6 +18,8 @@ export function BlockedScreen({ title, body, onLogout, home }) {
     <main className="center-screen">
       <h1>{title}</h1>
       <p className="muted" style={{ maxWidth: 480, textAlign: 'center' }}>{body}</p>
+      {onLogout && <p className="muted" style={{ margin: 0 }}>{t('login.accessTitle')}</p>}
+      {onLogout && <ContactLinks />}
       {onLogout && <button type="button" className="btn btn--primary" onClick={onLogout}>{t('common.logout')}</button>}
       {home && <Link className="btn" to="/">{t('common.home')}</Link>}
     </main>

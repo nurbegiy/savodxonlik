@@ -1,5 +1,5 @@
 export default {
-  app: { name: "Raqamli Dunyo", tagline: "Learn the computer by doing" },
+  app: { name: "KursorApp", subtitle: "Computer skills academy", tagline: "Learn the computer by doing" },
   common: {
     loading: "Loading…", retry: "Try again", cancel: "Cancel", save: "Save", close: "Close",
     back: "Back", logout: "Sign out", language: "Language", theme: "Theme", themeLight: "Light theme", themeDark: "Dark theme",
@@ -23,8 +23,21 @@ export default {
     passwordShort: "The password must be at least 8 characters.", passwordMismatch: "The passwords do not match.",
     adminOnly: "This page is for administrators only.",
   },
+  login: {
+    hero: "Learn the computer by doing, without the fear.",
+    lead: "You work a virtual computer with the mouse and keyboard. Every step checks your real action, not just your reading.",
+    p1: "Mouse: click, double-click, right-click",
+    p2: "Keyboard: Ctrl+C, Ctrl+V, Ctrl+Z, Ctrl+S",
+    p3: "Interface in Uzbek, Russian and English",
+    demoTip: "Double-click",
+    demoStep: "Open the “Documents” folder",
+    showPassword: "Show password",
+    hidePassword: "Hide password",
+    accessTitle: "Need access?",
+    accessBody: "KursorApp is invite-only: accounts are issued by the administrator. Message me and I’ll give you access.",
+  },
   home: {
-    heading: "Raqamli Dunyo: First Step",
+    heading: "Your first steps on the computer",
     intro: "Learn by acting inside a virtual computer. Every step checks what you actually do.",
     start: "Start", resume: "Resume", review: "Review", statusDone: "Completed", statusProgress: "In progress", statusNew: "New",
     locked: "Locked", lockedBy: "Finish the previous chapter first.", comingSoon: "Coming soon", steps: "{{count}} steps",
@@ -38,6 +51,7 @@ export default {
     ch7: "Devices and settings", ch8: "Managing programs", ch9: "Working independently",
   },
   competency: {
+    typing: "Typing text", selectAll: "Select all", textClipboard: "Copy, cut and paste text", undo: "Undo", saveShortcut: "Saving with Ctrl+S", fileShortcuts: "File shortcuts", writeText: "Writing a document", saveAs: "Saving with a name", chooseLocation: "Choosing where to save", reopenFile: "Reopening a file", editSave: "Editing and saving",
     mouse: "Using the mouse", icons: "Selecting and opening icons", windows: "Managing windows",
     taskbar: "The taskbar", startMenu: "The Start menu", folders: "Creating and opening folders",
     naming: "Naming files", copyPaste: "Copy and paste", rename: "Renaming",
@@ -81,6 +95,7 @@ export default {
       listLabel: "File list", renameInput: "New name",
     },
     notepad: {
+      saveAsBtn: "Save as", selectAll: "Select all", undo: "Undo",
       placeholder: "Type here…", save: "Save", fileName: "File name", folder: "Folder", untitled: "Untitled",
       saveAs: "Where should we save it?", unsaved: "unsaved", saved: "saved", errEmpty: "Enter a file name.", errInvalid: "The file name has forbidden characters.", errExists: "A file with that name exists.",
       textLabel: "Text area",

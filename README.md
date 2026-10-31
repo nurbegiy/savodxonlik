@@ -1,4 +1,6 @@
-# Raqamli Dunyo — story-driven computer academy
+# KursorApp — practical computer academy
+
+The name comes from the mouse cursor: you learn the computer by moving it yourself.
 
 React + Vite + Supabase. Learners practise inside a simulated computer; every step validates the *actual simulation state*.
 UI and lessons: **uz (default) / ru / en**, light + dark themes.
@@ -9,17 +11,18 @@ UI and lessons: **uz (default) / ru / en**, light + dark themes.
 |---|---|
 | Virtual desktop: icons, windows (move/min/max/restore/close), taskbar, Start menu, context menus | implemented, browser-tested |
 | Virtual filesystem: create/rename/copy/cut/paste/delete/restore/search, Recycle Bin, name validation | implemented, unit-tested |
-| Notepad with real save into the simulated filesystem | implemented |
+| Notepad with real save / Save As into the simulated filesystem, text select-all / copy / cut / paste / undo (real key presses) | implemented, browser-tested |
 | Guided engine: state machine, declarative steps, validation, hints, recovery, pause, restart, checkpoints, duplicate-event protection | implemented, unit-tested |
-| Chapter 1 *Yangi ish stoli* (13 steps) and Chapter 2 *Fayllar va tartib* (18 steps), full uz/ru/en copy | implemented, played end-to-end in Chromium |
+| Chapters 1 *Yangi ish stoli* (13 steps), 2 *Fayllar va tartib* (18), 3 *Klaviatura mahorati* (18), 5 *Hujjat yaratish* (13), full uz/ru/en copy | implemented, played end-to-end in Chromium with real keyboard input |
+| Login page (split layout, animated demo, light/dark, mobile) with an **access block** linking to Telegram / Instagram | implemented, screenshot-checked. Edit links in `src/config/contact.js` |
 | Auth (Supabase), protected routes, suspension/expiry, forced password change, admin user management | implemented; **Supabase side tested only against a local PGlite Postgres, not a live project** |
 | SQL migrations + RLS + `complete_lesson` server validation | implemented, 19 RLS tests on real migrations |
 | Edge Function `admin-users` (service-role key stays server-side) | implemented, **not executed** (needs a Supabase project) |
 
 ## Not yet built (honest list)
-Chapters 3–9 (keyboard, internet, documents, Word/Excel/PowerPoint simulators, settings, software, independent missions),
+Chapters 4 and 6–9 (internet, Word/Excel/PowerPoint simulators, settings, software, independent missions; shown as “coming soon”),
 the lesson **authoring UI** (lessons are versioned in code; DB tables for translations/versions exist), Start-menu search app,
-real-world practice confirmation UI (table exists), Alt+Tab/shortcut-recognition lesson. Real-device practice notes are shown after each chapter.
+real-world practice confirmation UI (table exists). Alt+Tab and keyboard-language switching are OS-level and cannot be captured by a browser, so the lessons say so and send learners to their real computer. Real-device practice notes are shown after each chapter.
 
 ## Run locally
 ```bash
@@ -49,7 +52,7 @@ Framework: Vite · Build `npm run build` · Output `dist` · env vars `VITE_SUPA
 ```bash
 npm test          # 61 unit/integration tests (engine, filesystem, locales parity, guards, theme contrast, RLS on real migrations via PGlite)
 npm run dev &     # with VITE_DEV_DEMO=true
-npm run e2e       # real-browser playthrough of chapters 1 and 2 (needs Playwright + Chromium)
+npm run e2e       # real-browser playthrough of chapters 1, 2, 3 and 5 (needs Playwright + Chromium)
 ```
 
 ## Architecture
@@ -73,4 +76,8 @@ a checkpoint from another lesson version is discarded, not migrated; changing la
 - Lesson data contains no executable code; only a fixed set of action types and condition kinds is accepted (`validateLesson`).
 
 ## Known limitations
+After adding/changing lessons run `npm run gen:seed` and execute `supabase/migrations/0003_seed_lessons.sql` in the Supabase SQL Editor (idempotent) — otherwise new chapters cannot be completed on the server.
+
+Chapter 3 part 2 needs a physical keyboard (Ctrl+C/V, Delete).
+
 Lesson file names (e.g. `Loyiha`, `Hisobot.txt`) are fixed Uzbek strings in all languages. Mobile uses a compact layout (windows full-screen) but chapters that teach keyboard shortcuts are best done on a computer.

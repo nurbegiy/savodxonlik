@@ -1,5 +1,5 @@
 export default {
-  app: { name: "Raqamli Dunyo", tagline: "Kompyuterni amalda o‘rganing" },
+  app: { name: "KursorApp", subtitle: "Kompyuter amaliyoti akademiyasi", tagline: "Kompyuterni amalda o‘rganing" },
   common: {
     loading: "Yuklanmoqda…", retry: "Qayta urinish", cancel: "Bekor qilish", save: "Saqlash", close: "Yopish",
     back: "Orqaga", logout: "Chiqish", language: "Til", theme: "Mavzu", themeLight: "Yorug‘ mavzu", themeDark: "Qorong‘i mavzu",
@@ -23,8 +23,21 @@ export default {
     passwordShort: "Parol kamida 8 ta belgidan iborat bo‘lsin.", passwordMismatch: "Parollar bir xil emas.",
     adminOnly: "Bu sahifa faqat administratorlar uchun.",
   },
+  login: {
+    hero: "Kompyuterni qo‘rqmasdan, amalda o‘rganing.",
+    lead: "Virtual kompyuterda sichqoncha va klaviatura bilan harakat qilasiz. Har bir qadam sizning haqiqiy amalingizni tekshiradi — shunchaki o‘qish emas.",
+    p1: "Sichqoncha: bosish, ikki marta bosish, o‘ng tugma",
+    p2: "Klaviatura: Ctrl+C, Ctrl+V, Ctrl+Z, Ctrl+S",
+    p3: "Interfeys: o‘zbek, rus va ingliz tillarida",
+    demoTip: "Ikki marta bosing",
+    demoStep: "“Hujjatlar” papkasini oching",
+    showPassword: "Parolni ko‘rsatish",
+    hidePassword: "Parolni yashirish",
+    accessTitle: "Kirish uchun dostup kerakmi?",
+    accessBody: "KursorApp yopiq: hisoblarni administrator beradi. Menga yozing — dostup beraman.",
+  },
   home: {
-    heading: "Raqamli Dunyo: Birinchi Qadam",
+    heading: "Kompyuterda birinchi qadam",
     intro: "Virtual kompyuterda harakat qilib o‘rganing. Har bir qadam sizning haqiqiy amalingizni tekshiradi.",
     start: "Boshlash", resume: "Davom etish", review: "Qayta ko‘rish", statusDone: "Bajarilgan", statusProgress: "Jarayonda", statusNew: "Yangi",
     locked: "Qulflangan", lockedBy: "Avval oldingi bobni tugating.", comingSoon: "Tez orada", steps: "{{count}} qadam",
@@ -38,6 +51,7 @@ export default {
     ch7: "Qurilmalar va sozlamalar", ch8: "Dasturlarni boshqarish", ch9: "Mustaqil ishlash",
   },
   competency: {
+    typing: "Matn yozish", selectAll: "Hammasini tanlash", textClipboard: "Matnni nusxalash, qirqish, qo‘yish", undo: "Bekor qilish", saveShortcut: "Ctrl+S bilan saqlash", fileShortcuts: "Fayllar bilan tezkor tugmalar", writeText: "Hujjat yozish", saveAs: "Nom berib saqlash", chooseLocation: "Saqlash joyini tanlash", reopenFile: "Faylni qayta ochish", editSave: "Tahrirlab saqlash",
     mouse: "Sichqoncha bilan ishlash", icons: "Belgilarni tanlash va ochish", windows: "Oynalarni boshqarish",
     taskbar: "Vazifalar paneli", startMenu: "Start menyusi", folders: "Papka yaratish va ochish",
     naming: "Fayllarga nom berish", copyPaste: "Nusxalash va qo‘yish", rename: "Nomini o‘zgartirish",
@@ -81,6 +95,7 @@ export default {
       listLabel: "Fayllar ro‘yxati", renameInput: "Yangi nom",
     },
     notepad: {
+      saveAsBtn: "Boshqa nom bilan", selectAll: "Hammasini tanlash", undo: "Bekor qilish",
       placeholder: "Shu yerga yozing…", save: "Saqlash", fileName: "Fayl nomi", folder: "Papka", untitled: "Nomsiz",
       saveAs: "Qayerga saqlaymiz?", unsaved: "saqlanmagan", saved: "saqlandi", errEmpty: "Fayl nomini yozing.", errInvalid: "Fayl nomida taqiqlangan belgilar bor.", errExists: "Bunday nomli fayl bor.",
       textLabel: "Matn maydoni",
